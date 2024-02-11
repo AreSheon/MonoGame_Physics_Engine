@@ -1,6 +1,3 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -9,19 +6,21 @@ using MonoGame.Extended;
 //https://learn.microsoft.com/en-us/nuget/quickstart/create-and-publish-a-package-using-visual-studio?tabs=netcore-cli -> follow this once finished
 namespace MonoGame_Physics_Engine.scripts.Physics_Objects
 {
+    //need to add optional grav
     public class PhyObj
     {
-        
-        public const float GravityCoe =.00008f; //this is for testing purely and is temporary
+
+        public const float GravityCoe = .00000f; //this is the global value for gravity. eother simulate with or without
 
         //this is the quick data encapsulation syntax for c#
         //the {get;set;} in the interfaces make these fields required to be implemented in a class that inherits the interface
         public/*temp public*/ Vector2 _V2pos { get; set; }
-        protected Vector2 _V2prePos { get; set; }
-        protected Vector2 _V2velocity { get; set; }
-        protected Vector2 _V2force { get; set; }
+        public Vector2 _V2prePos { get; set; }
+        public Vector2 _V2velocity { get; set; }
+        public Vector2 _V2force { get; set; }
+        public float dragCoe = 1;
 
-        protected float mass { get; set; }
+        public float mass { get; set; }
         
 
         //collider _collider
@@ -32,24 +31,24 @@ namespace MonoGame_Physics_Engine.scripts.Physics_Objects
             this._V2force = _V2force;
             this._V2prePos = _V2prePos;
             this.mass = mass;
-
+            
         }
 
         //note to self, I might need to create a separate  update that has a fixed update cycle(like fixed update in unity)
         //for testing this is globally accessible, might be able to change that in the future
-        public virtual void simulate(Vector2 InputForce)
+        public virtual void simulate(Vector2 InputForce, float UseGrav = GravityCoe)
         {
             //simple verlet intergration;
             //calculate acceleration
             Vector2 acc = (_V2force+InputForce / mass)/* 0.0001f*/;
-            /*temporary*/
-            acc.Y += GravityCoe;
+
+            acc.Y += UseGrav;
 
             //acc = Vector2.Zero;
 
 
             //find velocity
-            _V2velocity = (_V2pos - _V2prePos);
+            _V2velocity = (_V2pos - _V2prePos) * dragCoe;
             _V2prePos = _V2pos;
             _V2pos = _V2pos + _V2velocity + acc;
         }

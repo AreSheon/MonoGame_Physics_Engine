@@ -21,15 +21,15 @@ namespace MonoGame_Physics_Engine.scripts.Physics_Objects
 
         public Particle(Vector2 _V2startPos, Vector2 _V2force/*initial forces*/, Vector2 _V2PrePos, float mass, float diameter = 5) : base( _V2startPos, _V2force, _V2PrePos, mass) 
         {
-            //_V2pos = _V2startPos;
+            //_V2COM = _V2startPos;
             //_V2prePos = Vector2.One * 100;
             //this._V2force = _V2force;
             this.diameter = diameter;
         }
-        public override void simulate(Vector2 inputForce)
+        public override void simulate(Vector2 inputForce, float UseGrav = GravityCoe)
         {
             //just implements the base class used in the phy_object
-            base.simulate(inputForce);
+            base.simulate(inputForce, UseGrav);
             
         }
 
@@ -40,6 +40,12 @@ namespace MonoGame_Physics_Engine.scripts.Physics_Objects
         {         
             base.ParticleWallBounce(_graphics, this.diameter);
         }
+
+        /*public void rotateAround(Vector2 Point, float angularSpeed)
+        {
+            //
+        }*/
+
         /// <summary>
         /// draws a point representing the particle
         /// </summary>
